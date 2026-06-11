@@ -104,7 +104,6 @@ func inputMovie(tabMovies *Movies, n *int) {
 }
 
 func updateMovie(tabMovies *Movies, i int) {
-
 	fmt.Printf("\nMasukkan judul film baru: ")
 	fmt.Scan(&tabMovies[i].judul)
 
@@ -220,20 +219,21 @@ func sortMoviesByReleaseYear(tabMovies *Movies, n int) {
 
 func statisticMovie(tabMovies Movies, n int) {
 	type Genre struct {
-		name  string
+		name string
 		count int
 	}
 	var tabGenre [NMAX]Genre
 
 	var totalRating float64
-	var i, j int
+	var i, j, nGenre int
 	var found bool
 
+	nGenre = 0
 	for i = 0; i < n; i++ {
 		totalRating += tabMovies[i].skor
 		found = false
 		j = 0
-		for j < i && !found {
+		for j < nGenre && !found {
 			if tabGenre[j].name == tabMovies[i].genre {
 				tabGenre[j].count++
 				found = true
@@ -242,14 +242,15 @@ func statisticMovie(tabMovies Movies, n int) {
 		}
 
 		if !found {
-			tabGenre[i].name = tabMovies[i].genre
-			tabGenre[i].count = 1
+			tabGenre[nGenre].name = tabMovies[i].genre
+			tabGenre[nGenre].count = 1
+			nGenre++
 		}
 	}
 
 	fmt.Printf("\nRata-Rata Rating Seluruh Film: %.2f\n", totalRating/float64(n))
 	fmt.Println("Jumlah Film per Genre:")
-	for i = 0; i < n; i++ {
+	for i = 0; i < nGenre; i++ {
 		if tabGenre[i].name != "" {
 			fmt.Printf("- %s: %d film\n", tabGenre[i].name, tabGenre[i].count)
 		}
