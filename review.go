@@ -1,4 +1,5 @@
 package main
+
 import "fmt"
 
 const NMAX = 999
@@ -16,7 +17,7 @@ func main() {
 	var n, pilihan, i int
 	var selesai = false
 	var judul, genre string
-	n = 0
+	tabMovies, n = SeedMovies()
 
 	for !selesai {
 		fmt.Println("\n=== Aplikasi Katalog dan Rating Film (CineReview) ===")
@@ -130,9 +131,14 @@ func deleteMovie(tabMovies *Movies, n *int, i int) {
 	*n--
 }
 
+func printMovie(index int, movie Movie) {
+	fmt.Printf("\n%d. %s (%d)\n   Genre: %s\n   Skor: %.1f\n   Deskripsi: %s\n", index, movie.judul, movie.tahunRilis, movie.genre, movie.skor, movie.deskripsi)
+}
+
 func getAllMovies(tabMovies Movies, n int) {
-	for i := 0; i < n; i++ {
-		fmt.Printf("\n%d. %s (%d) - Skor: %.1f\n   Deskripsi: %s\n", i+1, tabMovies[i].judul, tabMovies[i].tahunRilis, tabMovies[i].skor, tabMovies[i].deskripsi)
+	var i int
+	for i = 0; i < n; i++ {
+		printMovie(i+1, tabMovies[i])
 	}
 }
 
@@ -163,7 +169,7 @@ func findMoviesByTitle(tabMovies Movies, n int, judul string) {
 		if tabMovies[mid].judul == judul {
 			found = true
 			fmt.Printf("\nFilm Ditemukan!\n")
-			fmt.Printf("%s (%d) - Skor: %.1f\n   Deskripsi: %s\n", tabMovies[mid].judul, tabMovies[mid].tahunRilis, tabMovies[mid].skor, tabMovies[mid].deskripsi)
+			printMovie(1, tabMovies[mid])
 		} else if tabMovies[mid].judul < judul {
 			left = mid + 1
 		} else {
@@ -181,7 +187,7 @@ func findMoviesByGenre(tabMovies Movies, n int, genre string) {
 	for i = 0; i < n; i++ {
 		if tabMovies[i].genre == genre {
 			count++
-			fmt.Printf("%d. %s (%d) - Skor: %.1f\n   Deskripsi: %s\n", count, tabMovies[i].judul, tabMovies[i].tahunRilis, tabMovies[i].skor, tabMovies[i].deskripsi)
+			printMovie(count, tabMovies[i])
 		}
 	}
 	if count == 0 {
