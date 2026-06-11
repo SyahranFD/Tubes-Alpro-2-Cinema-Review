@@ -121,11 +121,11 @@ func updateMovie(tabMovies *Movies, i int) {
 }
 
 func deleteMovie(tabMovies *Movies, n *int, i int) {
-	var j int
-	j = i
-	for j < *n-1 {
-		tabMovies[j] = tabMovies[j+1]
-		j++
+	var pass int
+	pass = i
+	for pass < *n-1 {
+		tabMovies[pass] = tabMovies[pass+1]
+		pass++
 	}
 	*n--
 }
@@ -137,21 +137,25 @@ func getAllMovies(tabMovies Movies, n int) {
 }
 
 func findMoviesByTitle(tabMovies Movies, n int, judul string) {
-	var left, right, mid int
+	var i, left, right, mid int
 	var found bool
+
+	var temp Movie
+	var pass int
+
 	left = 0
 	right = n - 1
 	mid = left + right/2
 	found = false
 
-	for i := 1; i < n; i++ {
-		temp := tabMovies[i]
-		j := i - 1
-		for j >= 0 && tabMovies[j].judul > temp.judul {
-			tabMovies[j+1] = tabMovies[j]
-			j--
+	for i = 1; i < n; i++ {
+		temp = tabMovies[i]
+		pass = i - 1
+		for pass >= 0 && tabMovies[pass].judul > temp.judul {
+			tabMovies[pass+1] = tabMovies[pass]
+			pass--
 		}
-		tabMovies[j+1] = temp
+		tabMovies[pass+1] = temp
 	}
 
 	for left <= right && !found {
@@ -185,17 +189,17 @@ func findMoviesByGenre(tabMovies Movies, n int, genre string) {
 	}
 }
 func sortMoviesByRating(tabMovies *Movies, n int) {
-	var i, j, maxIdx int
+	var i, pass, maxIdx int
 	var temp Movie
 	i = 0
 	for i = 0; i < n-1; i++ {
 		maxIdx = i
-		j = i + 1
-		for j < n {
-			if tabMovies[j].skor > tabMovies[maxIdx].skor {
-				maxIdx = j
+		pass = i + 1
+		for pass < n {
+			if tabMovies[pass].skor > tabMovies[maxIdx].skor {
+				maxIdx = pass
 			}
-			j++
+			pass++
 		}
 		temp = tabMovies[i]
 		tabMovies[i] = tabMovies[maxIdx]
@@ -204,16 +208,16 @@ func sortMoviesByRating(tabMovies *Movies, n int) {
 }
 
 func sortMoviesByReleaseYear(tabMovies *Movies, n int) {
-	var i, j int
+	var i, pass int
 	var temp Movie
 	for i = 1; i < n; i++ {
 		temp = tabMovies[i]
-		j = i - 1
-		for j >= 0 && tabMovies[j].tahunRilis < temp.tahunRilis {
-			tabMovies[j+1] = tabMovies[j]
-			j--
+		pass = i - 1
+		for pass >= 0 && tabMovies[pass].tahunRilis < temp.tahunRilis {
+			tabMovies[pass+1] = tabMovies[pass]
+			pass--
 		}
-		tabMovies[j+1] = temp
+		tabMovies[pass+1] = temp
 	}
 }
 
@@ -225,20 +229,20 @@ func statisticMovie(tabMovies Movies, n int) {
 	var tabGenre [NMAX]Genre
 
 	var totalRating float64
-	var i, j, nGenre int
+	var i, pass, nGenre int
 	var found bool
 
 	nGenre = 0
 	for i = 0; i < n; i++ {
 		totalRating += tabMovies[i].skor
 		found = false
-		j = 0
-		for j < nGenre && !found {
-			if tabGenre[j].name == tabMovies[i].genre {
-				tabGenre[j].count++
+		pass = 0
+		for pass < nGenre && !found {
+			if tabGenre[pass].name == tabMovies[i].genre {
+				tabGenre[pass].count++
 				found = true
 			}
-			j++
+			pass++
 		}
 
 		if !found {
