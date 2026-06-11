@@ -17,7 +17,7 @@ func main() {
 	var n, pilihan, i int
 	var selesai = false
 	var judul, genre string
-	tabMovies, n = SeedMovies()
+	n = 0
 
 	for !selesai {
 		fmt.Println("\n=== Aplikasi Katalog dan Rating Film (CineReview) ===")
@@ -261,8 +261,6 @@ func statisticMovie(tabMovies Movies, n int) {
 	fmt.Printf("\nRata-Rata Rating Seluruh Film: %.2f\n", totalRating/float64(n))
 	fmt.Println("Jumlah Film per Genre:")
 	for i = 0; i < nGenre; i++ {
-		if tabGenre[i].name != "" {
-			fmt.Printf("- %s: %d film\n", tabGenre[i].name, tabGenre[i].count)
-		}
+		fmt.Printf("- %s: %d film\n", tabGenre[i].name, tabGenre[i].count)
 	}
 }
