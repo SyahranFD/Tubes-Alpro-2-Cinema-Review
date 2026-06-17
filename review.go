@@ -1,5 +1,4 @@
 package main
-
 import "fmt"
 
 const NMAX = 999
@@ -18,6 +17,7 @@ func main() {
 	var selesai = false
 	var judul, genre string
 	n = 0
+	tabMovies, n = SeedMovies()
 
 	for !selesai {
 		fmt.Println("\n=== Aplikasi Katalog dan Rating Film (CineReview) ===")
@@ -194,7 +194,8 @@ func findMoviesByGenre(tabMovies Movies, n int, genre string) {
 		fmt.Println("Tidak ada film yang ditemukan dengan genre tersebut.")
 	}
 }
-func sortMoviesByRating(tabMovies *Movies, n int) {
+
+func sortMoviesByRating(tabMovies *Movies, n int, sortBy string) {
 	var i, pass, maxIdx int
 	var temp Movie
 	i = 0
