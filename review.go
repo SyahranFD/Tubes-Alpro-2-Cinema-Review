@@ -4,11 +4,12 @@ import "fmt"
 const NMAX = 999
 
 type Movie struct {
-	judul      string
+	judul string
 	tahunRilis int
-	genre      string
-	deskripsi  string
-	skor       float64
+	genre string
+	deskripsi string
+	skor float64
+	ulasan string
 }
 type Movies [NMAX]Movie
 
@@ -36,7 +37,7 @@ func main() {
 		fmt.Scan(&pilihan)
 
 		if pilihan == 1 {
-			if n < NMAX { //<- ini aku tambahin NMAX kalau udah lebih dari 999
+			if n < NMAX {
 				inputMovie(&tabMovies, &n)
 				getAllMovies(tabMovies, n)
 			} else {
@@ -44,13 +45,13 @@ func main() {
 			}
 
 		} else if pilihan == 2 {
-			if n == 0 { //ini aku tambahin kalau semisal nnya masih 0 terus orangnya milih ubah film
+			if n == 0 {
 				fmt.Println("Belum ada data film, mohon untuk menambahkan film.")
 			} else {
 				getAllMovies(tabMovies, n)
 				fmt.Printf("Masukkan nomor film yang ingin diubah (1-%d): ", n)
 				fmt.Scan(&i)
-				if i >= 1 && i <= n { //ini buat user masukin angka minus sama nol dia bakal minta datanya lagi
+				if i >= 1 && i <= n {
 					updateMovie(&tabMovies, i-1)
 					getAllMovies(tabMovies, n)
 				} else {
@@ -59,14 +60,14 @@ func main() {
 			}
 
 		} else if pilihan == 3 {
-			if n == 0 { // ini sama kayak ubah film
+			if n == 0 {
 				fmt.Println("Belum ada data film, mohon untuk menambahkan film.")
 			} else {
 				getAllMovies(tabMovies, n)
 				fmt.Printf("Masukkan nomor film yang ingin dihapus (1-%d): ", n)
 				fmt.Scan(&i)
 
-				if i >= 1 && i <= n { //ini juga sama kayak ubah film mwhehehe
+				if i >= 1 && i <= n {
 					deleteMovie(&tabMovies, &n, i-1)
 					getAllMovies(tabMovies, n)
 				} else {
@@ -75,7 +76,7 @@ func main() {
 			}
 
 		} else if pilihan == 4 {
-			if n == 0 { // ini juga
+			if n == 0 {
 				fmt.Println("Katalog film masih kosong")
 			} else {
 				fmt.Print("Masukkan judul film yang ingin dicari: ")
@@ -84,7 +85,7 @@ func main() {
 			}
 
 		} else if pilihan == 5 {
-			if n == 0 { //ini juga
+			if n == 0 {
 				fmt.Println("Katalog film masih kosong")
 			} else {
 				fmt.Print("Masukkan genre film yang ingin dicari: ")
@@ -93,7 +94,7 @@ func main() {
 			}
 
 		} else if pilihan == 6 {
-			if n == 0 { //ini juga
+			if n == 0 {
 				fmt.Println("Katalog film masih kosong")
 			} else {
 				sortMoviesByRating(&tabMovies, n)
@@ -101,7 +102,7 @@ func main() {
 			}
 
 		} else if pilihan == 7 {
-			if n == 0 { //ini juga
+			if n == 0 {
 				fmt.Println("Katalog film masih kosong")
 			} else {
 				sortMoviesByReleaseYear(&tabMovies, n)
@@ -112,7 +113,7 @@ func main() {
 			statisticMovie(tabMovies, n)
 
 		} else if pilihan == 9 {
-			if n == 0 { //ini juga
+			if n == 0 {
 				fmt.Println("Katalog film masih kosong")
 			} else {
 				getAllMovies(tabMovies, n)
@@ -143,6 +144,9 @@ func inputMovie(tabMovies *Movies, n *int) {
 	fmt.Printf("Masukkan skor film: ")
 	fmt.Scan(&tabMovies[*n].skor)
 
+	fmt.Printf("Masukkan ulasan film: ")
+	fmt.Scan(&tabMovies[*n].ulasan)
+
 	*n++
 }
 
@@ -161,6 +165,9 @@ func updateMovie(tabMovies *Movies, i int) {
 
 	fmt.Printf("Masukkan skor film baru: ")
 	fmt.Scan(&tabMovies[i].skor)
+
+	fmt.Printf("Masukkan ulasan film baru: ")
+	fmt.Scan(&tabMovies[i].ulasan)
 }
 
 func deleteMovie(tabMovies *Movies, n *int, i int) {
@@ -174,7 +181,7 @@ func deleteMovie(tabMovies *Movies, n *int, i int) {
 }
 
 func printMovie(index int, movie Movie) {
-	fmt.Printf("\n%d. %s (%d)\n   Genre: %s\n   Skor: %.1f\n   Deskripsi: %s\n", index, movie.judul, movie.tahunRilis, movie.genre, movie.skor, movie.deskripsi)
+	fmt.Printf("\n%d. %s (%d)\n   Genre: %s\n   Skor: %.1f\n   Deskripsi: %s\n   Ulasan: %s\n", index, movie.judul, movie.tahunRilis, movie.genre, movie.skor, movie.deskripsi, movie.ulasan)
 }
 
 func getAllMovies(tabMovies Movies, n int) {
@@ -237,7 +244,7 @@ func findMoviesByGenre(tabMovies Movies, n int, genre string) {
 	}
 }
 
-func sortMoviesByRating(tabMovies *Movies, n int, sortBy string) {
+func sortMoviesByRating(tabMovies *Movies, n int) {
 	var i, pass, maxIdx int
 	var temp Movie
 	i = 0
@@ -280,11 +287,11 @@ func statisticMovie(tabMovies Movies, n int) {
 	var i, pass, nGenre int
 	var found bool
 
-	if n == 0 { //ini juga biar kalau semisal datanya masih 0 dia bakal error makanya takbuat gini
+	if n == 0 {
 		fmt.Println("Belum ada film yang dimasukkan, mohon untuk memasukkan film terlebih dahulu")
 	} else {
 		nGenre = 0
-		totalRating = 0.0 //<- ini aku tambahin soalnya dideklarasi awal belum ada nilai awalnya
+		totalRating = 0.0
 		for i = 0; i < n; i++ {
 			totalRating += tabMovies[i].skor
 			found = false
