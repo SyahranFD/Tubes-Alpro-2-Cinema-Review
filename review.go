@@ -2,12 +2,13 @@ package main
 import "fmt"
 
 const NMAX = 999
+
 type Movie struct {
-	judul string
+	judul      string
 	tahunRilis int
-	genre string
-	deskripsi string
-	skor float64
+	genre      string
+	deskripsi  string
+	skor       float64
 }
 type Movies [NMAX]Movie
 
@@ -35,46 +36,87 @@ func main() {
 		fmt.Scan(&pilihan)
 
 		if pilihan == 1 {
-			inputMovie(&tabMovies, &n)
-			getAllMovies(tabMovies, n)
+			if n < NMAX { //<- ini aku tambahin NMAX kalau udah lebih dari 999
+				inputMovie(&tabMovies, &n)
+				getAllMovies(tabMovies, n)
+			} else {
+				fmt.Println("Kapasitas dalam aplikasi kami sudah penuh, mohon untuk hapus salah satu film terlebih dahulu")
+			}
 
 		} else if pilihan == 2 {
-			getAllMovies(tabMovies, n)
-			fmt.Printf("Masukkan nomor film yang ingin diubah (1-%d): ", n)
-			fmt.Scan(&i)
-			updateMovie(&tabMovies, i-1)
-			getAllMovies(tabMovies, n)
+			if n == 0 { //ini aku tambahin kalau semisal nnya masih 0 terus orangnya milih ubah film
+				fmt.Println("Belum ada data film, mohon untuk menambahkan film.")
+			} else {
+				getAllMovies(tabMovies, n)
+				fmt.Printf("Masukkan nomor film yang ingin diubah (1-%d): ", n)
+				fmt.Scan(&i)
+				if i >= 1 && i <= n { //ini buat user masukin angka minus sama nol dia bakal minta datanya lagi
+					updateMovie(&tabMovies, i-1)
+					getAllMovies(tabMovies, n)
+				} else {
+					fmt.Println("Nomor film yang anda masukan tidak valid!")
+				}
+			}
 
 		} else if pilihan == 3 {
-			getAllMovies(tabMovies, n)
-			fmt.Printf("Masukkan nomor film yang ingin dihapus (1-%d): ", n)
-			fmt.Scan(&i)
-			deleteMovie(&tabMovies, &n, i-1)
-			getAllMovies(tabMovies, n)
+			if n == 0 { // ini sama kayak ubah film
+				fmt.Println("Belum ada data film, mohon untuk menambahkan film.")
+			} else {
+				getAllMovies(tabMovies, n)
+				fmt.Printf("Masukkan nomor film yang ingin dihapus (1-%d): ", n)
+				fmt.Scan(&i)
+
+				if i >= 1 && i <= n { //ini juga sama kayak ubah film mwhehehe
+					deleteMovie(&tabMovies, &n, i-1)
+					getAllMovies(tabMovies, n)
+				} else {
+					fmt.Println("Nomor film yang anda masukan tidak valid!")
+				}
+			}
 
 		} else if pilihan == 4 {
-			fmt.Print("Masukkan judul film yang ingin dicari: ")
-			fmt.Scan(&judul)
-			findMoviesByTitle(tabMovies, n, judul)
+			if n == 0 { // ini juga
+				fmt.Println("Katalog film masih kosong")
+			} else {
+				fmt.Print("Masukkan judul film yang ingin dicari: ")
+				fmt.Scan(&judul)
+				findMoviesByTitle(tabMovies, n, judul)
+			}
 
 		} else if pilihan == 5 {
-			fmt.Print("Masukkan genre film yang ingin dicari: ")
-			fmt.Scan(&genre)
-			findMoviesByGenre(tabMovies, n, genre)
+			if n == 0 { //ini juga
+				fmt.Println("Katalog film masih kosong")
+			} else {
+				fmt.Print("Masukkan genre film yang ingin dicari: ")
+				fmt.Scan(&genre)
+				findMoviesByGenre(tabMovies, n, genre)
+			}
 
 		} else if pilihan == 6 {
-			sortMoviesByRating(&tabMovies, n)
-			getAllMovies(tabMovies, n)
+			if n == 0 { //ini juga
+				fmt.Println("Katalog film masih kosong")
+			} else {
+				sortMoviesByRating(&tabMovies, n)
+				getAllMovies(tabMovies, n)
+			}
 
 		} else if pilihan == 7 {
-			sortMoviesByReleaseYear(&tabMovies, n)
-			getAllMovies(tabMovies, n)
+			if n == 0 { //ini juga
+				fmt.Println("Katalog film masih kosong")
+			} else {
+				sortMoviesByReleaseYear(&tabMovies, n)
+				getAllMovies(tabMovies, n)
+			}
 
 		} else if pilihan == 8 {
 			statisticMovie(tabMovies, n)
 
 		} else if pilihan == 9 {
-			getAllMovies(tabMovies, n)
+			if n == 0 { //ini juga
+				fmt.Println("Katalog film masih kosong")
+			} else {
+				getAllMovies(tabMovies, n)
+			}
 
 		} else if pilihan == 0 {
 			selesai = true
@@ -230,38 +272,41 @@ func sortMoviesByReleaseYear(tabMovies *Movies, n int) {
 
 func statisticMovie(tabMovies Movies, n int) {
 	type Genre struct {
-		name string
+		name  string
 		count int
 	}
 	var tabGenre [NMAX]Genre
-
 	var totalRating float64
 	var i, pass, nGenre int
 	var found bool
 
-	nGenre = 0
-	for i = 0; i < n; i++ {
-		totalRating += tabMovies[i].skor
-		found = false
-		pass = 0
-		for pass < nGenre && !found {
-			if tabGenre[pass].name == tabMovies[i].genre {
-				tabGenre[pass].count++
-				found = true
+	if n == 0 { //ini juga biar kalau semisal datanya masih 0 dia bakal error makanya takbuat gini
+		fmt.Println("Belum ada film yang dimasukkan, mohon untuk memasukkan film terlebih dahulu")
+	} else {
+		nGenre = 0
+		totalRating = 0.0 //<- ini aku tambahin soalnya dideklarasi awal belum ada nilai awalnya
+		for i = 0; i < n; i++ {
+			totalRating += tabMovies[i].skor
+			found = false
+			pass = 0
+			for pass < nGenre && !found {
+				if tabGenre[pass].name == tabMovies[i].genre {
+					tabGenre[pass].count++
+					found = true
+				}
+				pass++
 			}
-			pass++
-		}
 
-		if !found {
-			tabGenre[nGenre].name = tabMovies[i].genre
-			tabGenre[nGenre].count = 1
-			nGenre++
+			if !found {
+				tabGenre[nGenre].name = tabMovies[i].genre
+				tabGenre[nGenre].count = 1
+				nGenre++
+			}
 		}
-	}
-
-	fmt.Printf("\nRata-Rata Rating Seluruh Film: %.2f\n", totalRating/float64(n))
-	fmt.Println("Jumlah Film per Genre:")
-	for i = 0; i < nGenre; i++ {
-		fmt.Printf("- %s: %d film\n", tabGenre[i].name, tabGenre[i].count)
+		fmt.Printf("\nRata-Rata Rating Seluruh Film: %.2f\n", totalRating/float64(n))
+		fmt.Println("Jumlah Film per Genre:")
+		for i = 0; i < nGenre; i++ {
+			fmt.Printf("- %s: %d film\n", tabGenre[i].name, tabGenre[i].count)
+		}
 	}
 }
