@@ -184,7 +184,7 @@ func deleteMovie(tabMovies *Movies, n *int, i int) {
 }
 
 func printMovie(index int, movie Movie) {
-	fmt.Printf("\n%d. %s (%d)\n   Genre: %s\n   Skor: %.1f\n   Deskripsi: %s\n   Ulasan: %s\n", index, movie.judul, movie.tahunRilis, movie.genre, movie.skor, movie.deskripsi, movie.ulasan)
+	fmt.Printf("\n%2d. %s (%d)\n    Genre: %s\n    Skor: %.1f\n    Deskripsi: %s\n    Ulasan: %s\n", index, movie.judul, movie.tahunRilis, movie.genre, movie.skor, movie.deskripsi, movie.ulasan)
 }
 
 func getAllMovies(tabMovies Movies, n int) {
