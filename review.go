@@ -1,5 +1,8 @@
 package main
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const NMAX = 999
 
@@ -200,13 +203,13 @@ func findMoviesByTitle(tabMovies Movies, n int, judul string) {
 
 	left = 0
 	right = n - 1
-	mid = left + right/2
+	mid = (left + right) / 2
 	found = false
 
 	for i = 1; i < n; i++ {
 		temp = tabMovies[i]
 		pass = i - 1
-		for pass >= 0 && tabMovies[pass].judul > temp.judul {
+		for pass >= 0 && strings.ToLower(tabMovies[pass].judul) > strings.ToLower(temp.judul) {
 			tabMovies[pass+1] = tabMovies[pass]
 			pass--
 		}
@@ -215,11 +218,11 @@ func findMoviesByTitle(tabMovies Movies, n int, judul string) {
 
 	for left <= right && !found {
 		mid = (left + right) / 2
-		if tabMovies[mid].judul == judul {
+		if strings.EqualFold(tabMovies[mid].judul, judul) {
 			found = true
 			fmt.Printf("\nFilm Ditemukan!\n")
 			printMovie(1, tabMovies[mid])
-		} else if tabMovies[mid].judul < judul {
+		} else if strings.ToLower(tabMovies[mid].judul) < strings.ToLower(judul) {
 			left = mid + 1
 		} else {
 			right = mid - 1
